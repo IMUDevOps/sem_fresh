@@ -1,6 +1,7 @@
 package com.napier.sem;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class App
 { /**
@@ -33,7 +34,8 @@ private Connection con = null;
                 // Wait a bit for db to start
                 Thread.sleep(30000);
                 // Connect to database
-                con = DriverManager.getConnection("jdbc:mysql://db:3306/employees?useSSL=false", "root", "example");
+                con = DriverManager.getConnection("jdbc:mysql://db:3306/world?useSSL=false", "root", "example");
+
                 System.out.println("Successfully connected");
                 break;
             }
@@ -67,7 +69,7 @@ private Connection con = null;
             }
         }
     }
-    public Employee getEmployee(int ID)
+    public ArrayList<Country> getCountryByPopulationtop10()
     {
         try
         {
@@ -75,23 +77,24 @@ private Connection con = null;
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT emp_no, first_name, last_name "
-                            + "FROM employees "
-                            + "WHERE emp_no = " + ID;
+                    "SELECT * from country order by Population desc limit 1";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
             // Check one is returned
-            if (rset.next())
+            ArrayList<Country> countries = new ArrayList<Country>();
+           while (rset.next())
             {
-                Employee emp = new Employee();
-                emp.emp_no = rset.getInt("emp_no");
-                emp.first_name = rset.getString("first_name");
-                emp.last_name = rset.getString("last_name");
-                return emp;
+                Country country = new Country();
+                country.setCode( rset.getString("Code"));
+                country.setName(rset.getString("Name"));
+                country.setContinent(rset.getString("Continent"));
+                country.setCapital(rset.getString("Capital"));
+                country.setPopulation(rset.getInt("Population"));
+                country.setRegion(rset.getString("Region"));
+                countries.add(country);
             }
-            else
-                return null;
+            return countries;
         }
         catch (Exception e)
         {
@@ -107,10 +110,17 @@ private Connection con = null;
 
         // Connect to database
         a.connect();
+        // Report No 1 country population of top ten
+        ArrayList<Country> countries =a.getCountryByPopulationtop10();
+        System.out.println("Country Code"+"\t"+"Name"+"\t"+"Continent"+"\t"+"Region"+"\t"+ "Country Code");
+        for(Country c: countries)
+        {
+           System.out.println(c.getCode()+"\t"+c.getName()+"\t"+c.getContinent()+"\t"+c.getRegion()+"\t"+c.getCode());
+        }
         // Get Employee
-        Employee emp = a.getEmployee(255530);
+       // Employee emp = a.getEmployee(255530);
         // Display results
-        a.displayEmployee(emp);
+      //  a.displayEmployee(emp);
 
         // Disconnect from database
         a.disconnect();
