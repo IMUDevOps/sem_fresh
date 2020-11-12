@@ -77,7 +77,7 @@ private Connection con = null;
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT * from country order by Population desc limit 1";
+                    "SELECT * from country order by Population desc";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
@@ -112,11 +112,7 @@ private Connection con = null;
         a.connect();
         // Report No 1 country population of top ten
         ArrayList<Country> countries =a.getCountryByPopulationtop10();
-        System.out.println("Country Code"+"\t"+"Name"+"\t"+"Continent"+"\t"+"Region"+"\t"+ "Country Code");
-        for(Country c: countries)
-        {
-           System.out.println(c.getCode()+"\t"+c.getName()+"\t"+c.getContinent()+"\t"+c.getRegion()+"\t"+c.getCode());
-        }
+
         // Get Employee
        // Employee emp = a.getEmployee(255530);
         // Display results
@@ -125,18 +121,12 @@ private Connection con = null;
         // Disconnect from database
         a.disconnect();
     }
-    public void displayEmployee(Employee emp)
+    public void displayCountries(ArrayList<Country> countries)
     {
-        if (emp != null)
+        System.out.println("Country Code"+"\t"+"Name"+"\t"+"Continent"+"\t"+"Region"+"\t"+ "Country Code");
+        for(Country c: countries)
         {
-            System.out.println(
-                    emp.emp_no + " "
-                            + emp.first_name + " "
-                            + emp.last_name + "\n"
-                            + emp.title + "\n"
-                            + "Salary:" + emp.salary + "\n"
-                            + emp.dept_name + "\n"
-                            + "Manager: " + emp.manager + "\n");
+            System.out.println(c.getCode()+"\t"+c.getName()+"\t"+c.getContinent()+"\t"+c.getRegion()+"\t"+c.getCode());
         }
     }
 }
